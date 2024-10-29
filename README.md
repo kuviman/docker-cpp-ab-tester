@@ -1,2 +1,35 @@
-1. Run `docker build -t cpp-ab-tester .` in the docker dir
-1. Run r.bat/r.sh with single argument ok or ce or partial
+#  ак запускать пример
+
+1. ¬ыполните `docker build -t cpp-ab-tester .` в директории docker
+1. «атем запустите r.bat/r.sh с единственным параметром командной строки, равным ok, ce или partial
+1. ѕосмотрите в outcome/result.json
+
+# “ребовани€ к контейнеру
+
+ƒокер-контейнер будет запускатьс€ вот так:
+
+`docker run --rm -v $(pwd)/income:/income -v $(pwd)/outcome:/outcome <container-name>`
+
+¬ `/income` он ожидает всЄ то, что послал участник в разархивированном виде.
+
+¬ `/outcome` он должен записать единственный файл result.json. ” него всегда три пол€: 
+
+1. verdict=COMPILATION_ERROR|OK,
+1. points=вещественное число\ записанное обычным образом, не превосходит 10000, не более 3 знаков после дес€тичной точки,
+1. comment=человекочитаемый комментарий (протокол), который будет доступен участнику
+
+### “ипичное поведение контейнера:
+
+1. ≈сли есть фаза компил€ции отосланного решени€, то попробовать сделать его. ≈сли не получилось, то вернуть такой result.json:
+`{"verdict":"COMPILATION_ERROR","points":0,"comment":"/income/program.cpp: In function 'int main()':\n/income/program.cpp:9:13: error: expected ';' before '}' token\n    9 |     return 0\n      |             ^\n      |             ;\n   10 | }\n      | ~            "}`
+
+1. ≈сли фазы компил€ции нет, то перейти к тестированию на последовательности тестов (называть их test cases).
+
+1. «апускать на каждом из них, вести протокол, помнить, что он будет доступен участнику.
+
+1. «авершитьс€ вот с таким примерно result.json:
+`{"verdict":"OK","points":3,"comment":"Test case 1: Passed\nTest case 2: Passed\nTest case 3: Passed\n"}`
+
+—уммарно comment не делать длиннее 1KB в любом случае при любом исходе
+
+
