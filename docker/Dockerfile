@@ -13,4 +13,4 @@ RUN chmod +x /app/test.sh
 RUN mkdir -p /outcome
 
 # Run the test script on container start
-CMD ["/app/test.sh"]
+ENTRYPOINT ["/app/test.sh"]

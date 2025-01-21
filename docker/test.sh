@@ -1,12 +1,14 @@
 #!/bin/bash
 
+set -ex
+
 # Define paths
-PROGRAM_PATH="/income/program.cpp"
+PROGRAM_PATH=$2
 COMPILED_PROGRAM="./program"
-TEST_FOLDER="./tests"
-RESULT_JSON_FILE="/outcome/result.json"
+TEST_FOLDER="$(dirname $0)/tests"
+# RESULT_JSON_FILE="/outcome/result.json"
 SCORE=0
-MAX_SCORE=3
+MAX_SCORE=4
 VERDICT="OK"
 COMMENT=""
 
@@ -28,15 +30,9 @@ if [ ! -f "$PROGRAM_PATH" ]; then
     exit 0
 fi
 
-if [ $(ls /income | wc -l) -ne 1 ]; then
-    VERDICT="FAILED"
-    COMMENT="Error: /income contains files other than program.cpp."
-    write_result
-    exit 0
-fi
-
 # Attempt to compile the program
-g++ "$PROGRAM_PATH" -o "$COMPILED_PROGRAM" 2> compile_log.txt
+cp "$PROGRAM_PATH" /tmp/program.cpp # copy because it can have wrong extension and g++ doesnt like it
+g++ /tmp/program.cpp -o "$COMPILED_PROGRAM" 2> compile_log.txt
 if [ $? -ne 0 ]; then
     VERDICT="COMPILATION_ERROR"
     # Limit the compilation log to 1KB before escaping it for JSON
@@ -61,7 +57,7 @@ for i in $(seq 1 $MAX_SCORE); do
     fi
 
     # Run the compiled program with timeout and memory limit
-    RESULT=$(timeout 1s "$COMPILED_PROGRAM" < "$INPUT_FILE" > "$OUTPUT_FILE" 2>&1)
+    RESULT=$(timeout 1s "$COMPILED_PROGRAM" < "$INPUT_FILE" > "$OUTPUT_FILE" 2>&1 || true)
     
     # Check for time and memory limits
     if [ $? -ne 0 ]; then
@@ -75,9 +71,11 @@ for i in $(seq 1 $MAX_SCORE); do
     
     # Compare output with expected
     if cmp -s "$OUTPUT_FILE" "$EXPECTED_FILE"; then
+        echo "OK"
         COMMENT+="Test case $i: Passed\n"
-        ((SCORE++))
+        SCORE=$((SCORE+1))
     else
+        echo "WA"
         COMMENT+="Test case $i: Wrong Answer\n"
     fi
 done
