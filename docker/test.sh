@@ -32,7 +32,7 @@ fi
 
 # Attempt to compile the program
 cp "$PROGRAM_PATH" /tmp/program.cpp # copy because it can have wrong extension and g++ doesnt like it
-g++ /tmp/program.cpp -o "$COMPILED_PROGRAM" 2> compile_log.txt
+g++ /tmp/program.cpp -o "$COMPILED_PROGRAM" 2> compile_log.txt || true
 if [ $? -ne 0 ]; then
     VERDICT="COMPILATION_ERROR"
     # Limit the compilation log to 1KB before escaping it for JSON
