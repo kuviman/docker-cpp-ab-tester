@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 # Define paths
 PROGRAM_PATH=$2
 COMPILED_PROGRAM="./program"
@@ -32,7 +30,7 @@ fi
 
 # Attempt to compile the program
 cp "$PROGRAM_PATH" /tmp/program.cpp # copy because it can have wrong extension and g++ doesnt like it
-g++ /tmp/program.cpp -o "$COMPILED_PROGRAM" 2> compile_log.txt || true
+g++ /tmp/program.cpp -o "$COMPILED_PROGRAM" 2> compile_log.txt
 if [ $? -ne 0 ]; then
     VERDICT="COMPILATION_ERROR"
     # Limit the compilation log to 1KB before escaping it for JSON
@@ -57,7 +55,7 @@ for i in $(seq 1 $MAX_SCORE); do
     fi
 
     # Run the compiled program with timeout and memory limit
-    RESULT=$(timeout 1s "$COMPILED_PROGRAM" < "$INPUT_FILE" > "$OUTPUT_FILE" 2>&1 || true)
+    RESULT=$(timeout 1s "$COMPILED_PROGRAM" < "$INPUT_FILE" > "$OUTPUT_FILE" 2>&1)
     
     # Check for time and memory limits
     if [ $? -ne 0 ]; then
