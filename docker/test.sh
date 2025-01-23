@@ -17,7 +17,7 @@ escape_json() {
 
 # Function to write result to JSON
 write_result() {
-    echo "{\"verdict\":\"$VERDICT\",\"points\":$SCORE,\"comment\":\"$COMMENT\"}" > "$RESULT_JSON_FILE"
+    echo "{\"verdict\":\"$VERDICT 123\",\"points\":$SCORE,\"comment\":\"$COMMENT\"}" > "$RESULT_JSON_FILE"
 }
 
 # Check if program.cpp is the only file in /income
