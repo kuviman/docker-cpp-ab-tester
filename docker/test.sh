@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # Define paths
-PROGRAM_PATH=$2
+mkdir /tmp/src
+unzip $2 -d /tmp/src
+# PROGRAM_PATH=$2
+PROGRAM_PATH=/tmp/src/main.text
 COMPILED_PROGRAM="./program"
 TEST_FOLDER="$(dirname $0)/tests"
 # RESULT_JSON_FILE="/outcome/result.json"
