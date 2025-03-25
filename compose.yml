@@ -1,0 +1,7 @@
+services:
+  cpp-ab-tester:
+    build: docker
+    command: program.cpp
+    working_dir: /income
+    volumes:
+      - "./incomes/${SOLUTION:?}.cpp:/income/program.cpp"

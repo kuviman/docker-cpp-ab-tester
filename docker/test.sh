@@ -7,6 +7,8 @@ TEST_FOLDER="$(dirname $0)/tests"
 # RESULT_JSON_FILE="/outcome/result.json"
 SCORE=0
 MAX_SCORE=4
+TEST_CASES="$(seq 1 $MAX_SCORE)"
+# TEST_CASES=$(cat $1)
 VERDICT="OK"
 COMMENT=""
 
@@ -17,13 +19,13 @@ escape_json() {
 
 # Function to write result to JSON
 write_result() {
-    echo "{\"verdict\":\"$VERDICT\",\"points\":$SCORE,\"comment\":\"$COMMENT\"}" > "$RESULT_JSON_FILE"
+    echo "{\"verdict\":\"$VERDICT\",\"points\":$SCORE,\"comment\":\"$COMMENT\"}" | tee "$RESULT_JSON_FILE"
 }
 
-# Check if program.cpp is the only file in /income
+# Check if program exists
 if [ ! -f "$PROGRAM_PATH" ]; then
     VERDICT="FAILED"
-    COMMENT="Error: program.cpp not found in /income."
+    COMMENT="Error: $PROGRAM_PATH does not exist (or is directory)"
     write_result
     exit 0
 fi
@@ -40,7 +42,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Run tests
-for i in $(seq 1 $MAX_SCORE); do
+for i in $TEST_CASES; do
     echo "Running test case ${i}"
 
     INPUT_FILE="$TEST_FOLDER/input$i.txt"
